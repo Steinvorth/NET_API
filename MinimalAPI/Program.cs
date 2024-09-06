@@ -1,8 +1,13 @@
 using Microsoft.AspNetCore.Cors;
+using Microsoft.EntityFrameworkCore;
+using MinimalAPI;
 using MinimalAPI.Entities;
+using MinimalAPI.Repository;
 
 var builder = WebApplication.CreateBuilder(args);
 var allowedOrigins = builder.Configuration.GetValue<string>("allowed_origins")!;
+
+builder.Services.AddDbContext<ApplicationDBContext>(options => options.UseSqlServer("name=DefaultConnection"));
 
 builder.Services.AddCors(options =>
 {
@@ -35,6 +40,8 @@ if(builder.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+builder.Services.AddScoped<IRepositoryGenre, RepositoryGenre>(); //Allows the use of the repository genre in the application
 
 app.UseCors(); //allow app to use the defined cores above.
 app.UseOutputCache(); //use the output cache middleware
@@ -69,5 +76,12 @@ app.MapGet("/genre", () =>
 
     return genres;
 }).CacheOutput(c => c.Expire(TimeSpan.FromSeconds(15))); //cache the response for 15 seconds
+
+//post request to create a genre
+app.MapPost("/genre", async (IRepositoryGenre repository, Genre genre) =>
+{
+    var id = await repository.Create(genre);
+    return Results.Created($"/genre/{id}", genre);
+});
 
 app.Run();
