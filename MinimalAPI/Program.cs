@@ -37,6 +37,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepositoryGenre, RepositoryGenre>(); //Allows the use of the repository genre in the application
+builder.Services.AddAutoMapper(typeof(Program)); //Allows the use of automapper in the application
 
 var app = builder.Build();
 
