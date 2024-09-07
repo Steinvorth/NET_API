@@ -4,7 +4,7 @@
     {
         Task Delete(string? route, string containerName);
         Task<string> Save(IFormFile image, string containerName);
-        async Task<string> Edit(IFormFile image, string containerName, string route)
+        async Task<string> Edit(string? route, string containerName, IFormFile image)
         {
             await Delete(route, containerName);
             return await Save(image, containerName);

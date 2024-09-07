@@ -1,4 +1,5 @@
-﻿using MinimalAPI.Entities;
+﻿using MinimalAPI.DTOs;
+using MinimalAPI.Entities;
 
 namespace MinimalAPI.Repository
 {
@@ -7,8 +8,9 @@ namespace MinimalAPI.Repository
         Task<int> Create(Actor actor);
         Task Delete(int id);
         Task<bool> Exists(int id);
-        Task<List<Actor>> GetAll();
+        Task<List<Actor>> GetAll(PaginationDTO paginationDTO);
         Task<Actor?> GetById(int id);
+        Task<List<Actor>> GetByName(string name);
         Task Update(Actor actor);
     }
 }
