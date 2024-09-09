@@ -39,6 +39,7 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddScoped<IRepositoryGenre, RepositoryGenre>(); //Allows the use of the repository genre in the application
 builder.Services.AddScoped<IRepositoryActor, RepositoryActor>(); //Allows the use of the repository genre in the application
+builder.Services.AddScoped<IRepositoryMovie, RepositoryMovie>(); //Allows the use of the repository genre in the application
 
 //file storage
 builder.Services.AddScoped<I_FileStore, FileStorage>(); //Allows the use of the file store in the application
@@ -64,5 +65,6 @@ app.MapGet("/", [EnableCors(policyName: "open")] () => "Hello World!"); //adding
 
 app.MapGroup("/genre").MapGenre();
 app.MapGroup("/actors").MapActors();
+app.MapGroup("/movies").MapMovies();
 
 app.Run();
