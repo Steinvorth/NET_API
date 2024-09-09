@@ -44,6 +44,11 @@ namespace MinimalAPI.Repository
             return await _context.Actors.AnyAsync(x => x.Id == id);
         }
 
+        public async Task<List<int>> ActorExist(List<int> ids)
+        {
+            return await _context.Actors.Where(x => ids.Contains(x.Id)).Select(x => x.Id).ToListAsync();
+        }
+
         public async Task Update(Actor actor)
         {
             _context.Update(actor);

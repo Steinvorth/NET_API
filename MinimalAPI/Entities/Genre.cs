@@ -8,5 +8,7 @@ namespace MinimalAPI.Entities
 
         //[StringLength(50)] these tags will also limit and modify the database schema
         public string Name { get; set; } = null!;
+
+        public List<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
     }
 }

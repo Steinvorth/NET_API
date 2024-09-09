@@ -21,6 +21,8 @@ namespace MinimalAPI.EndPoints
             group.MapGet("/{id:int}", GetById);
             group.MapPut("/{id:int}", Update).DisableAntiforgery();
             group.MapDelete("/{id:int}", Delete).DisableAntiforgery();
+            group.MapPost("/{id:int}/genre", AsignGenre);
+            group.MapPost("/{id:int}/actor", AsignActors).DisableAntiforgery();
 
             return group;
         }
@@ -102,6 +104,59 @@ namespace MinimalAPI.EndPoints
             await repository.Delete(id);
             await fileStorage.Delete(dbMovie.Poster, container);
             await outputCacheStore.EvictByTagAsync("movies-get", default);
+
+            return TypedResults.NoContent();
+        }
+
+        static async Task<Results<NoContent, NotFound, BadRequest<string>>> AsignGenre(int id, List<int> genreIds, IRepositoryMovie repositoryMovie, IRepositoryGenre repositoryGenre)
+        {
+            if(!await repositoryMovie.Exists(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var existingGenres = await repositoryGenre.GenreExists(genreIds);
+
+            if (existingGenres.Count != 0)
+            {
+                existingGenres = await repositoryGenre.GenreExists(genreIds);
+            }
+
+            if (existingGenres.Count != genreIds.Count)
+            {
+                var nonExistenGenres = genreIds.Except(existingGenres);
+
+                return TypedResults.BadRequest($"Genres with ids {string.Join(",", nonExistenGenres)} do not exist");
+            }
+
+            await repositoryMovie.AsignGenre(id, genreIds);
+            return TypedResults.NoContent();
+        }
+
+        static async Task<Results<NotFound, NoContent, BadRequest<string>>> AsignActors(int id, List<AsignMovieActorDTO> movieActorsDTO,
+            IRepositoryMovie repositoryMovie, IRepositoryActor repositoryActor, IMapper mapper)
+        {
+            if(!await repositoryMovie.Exists(id))
+            {
+                return TypedResults.NotFound();
+            }
+
+            var existingActors = new List<int>();
+            var actorIds = movieActorsDTO.Select(x => x.ActorId).ToList();
+
+            if(actorIds.Count != 0)
+            {
+                existingActors = await repositoryActor.ActorExist(actorIds);
+            }
+
+            if (existingActors.Count != movieActorsDTO.Count)
+            {
+                var nonExistentActors = actorIds.Except(existingActors);
+                return TypedResults.BadRequest($"Actors with ids {string.Join(",", nonExistentActors)} do not exist");
+            }
+
+            var actors = mapper.Map<List<MovieActors>>(movieActorsDTO);
+            await repositoryMovie.AsignActors(id, actors);
 
             return TypedResults.NoContent();
         }

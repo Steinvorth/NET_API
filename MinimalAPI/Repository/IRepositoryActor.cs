@@ -5,6 +5,7 @@ namespace MinimalAPI.Repository
 {
     public interface IRepositoryActor
     {
+        Task<List<int>> ActorExist(List<int> ids);
         Task<int> Create(Actor actor);
         Task Delete(int id);
         Task<bool> Exists(int id);

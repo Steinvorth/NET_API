@@ -10,5 +10,6 @@ namespace MinimalAPI.Entities
 
         [Unicode(true)]
         public string? Picture { get; set; } 
+        public List<MovieActors> MovieActors { get; set; } = new List<MovieActors>();
     }
 }

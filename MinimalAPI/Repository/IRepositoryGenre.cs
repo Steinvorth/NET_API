@@ -10,6 +10,6 @@ namespace MinimalAPI.Repository
         Task<bool> Exists(int id);
         Task Update(Genre genre);
         Task Delete(int id);
-
+        Task<List<int>> GenreExists(List<int> ids);
     }
 }

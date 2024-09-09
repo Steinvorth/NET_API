@@ -27,6 +27,11 @@ namespace MinimalAPI.Repository
             return await _dbContext.Genres.AnyAsync(x => x.Id == id);
         }
 
+        public async Task<List<int>> GenreExists(List<int> ids)
+        {
+            return await _dbContext.Genres.Where(x => ids.Contains(x.Id)).Select(x => x.Id).ToListAsync();
+        }
+
         public async Task<List<Genre>> GetAll()
         {
             return await _dbContext.Genres.OrderBy(x => x.Name).ToListAsync(); //orders by name

@@ -11,5 +11,7 @@ namespace MinimalAPI.Entities
 
         [Unicode]
         public string? Poster { get; set; }
+        public List<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
+        public List<MovieActors> MovieActors { get; set; } = new List<MovieActors>();
     }
 }
