@@ -18,8 +18,11 @@ namespace MinimalAPI.Utilities
 
             //Movie
             CreateMap<CreateMovieDTO, Movie>().ForMember(x => x.Poster, options => options.Ignore());
-            CreateMap<Movie, ReadMovieDTO>().ForMember(x => x.Genres, entity => entity
-            .MapFrom(p => p.MovieGenres.Select(x => new ReadGenreDTO { Id = x.GenreId, Name =  x.Genre.Name })));
+            CreateMap<Movie, ReadMovieDTO>()
+                .ForMember(x => x.Genres, entity => entity
+                    .MapFrom(p => p.MovieGenres.Select(x => new ReadGenreDTO { Id = x.GenreId, Name =  x.Genre.Name })))
+                .ForMember(x => x.Actors, entity => entity
+                    .MapFrom(x => x.MovieActors.Select(x => new MovieActorDTO { Id = x.ActorId, Name = x.Actor.Name, Character = x.Character })));
 
             //MovieActors
             CreateMap<AsignMovieActorDTO, MovieActors>();

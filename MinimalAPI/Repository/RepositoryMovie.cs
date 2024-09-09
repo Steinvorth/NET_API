@@ -31,7 +31,7 @@ namespace MinimalAPI.Repository
                 .ToListAsync();
         }
 
-        public async Task<Movie> GetById(int id)
+        public async Task<Movie?> GetById(int id)
         {
             return await context.Movies
                 .Include(x => x.MovieGenres).ThenInclude(x => x.Genre)
